@@ -1,11 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of Portfolio
  *
@@ -13,17 +7,26 @@
  */
 class Portfolio extends CI_Controller {
 
+    public function __construct() {
+        parent::__construct();
+        $this->load->helper('url');
+        $this->load->model('SkillModel', 'skillsM');
+    }
+
     public function view($page = 'frontpage') {
-        if (!file_exists(APPPATH.'views/pages/'.$page.'.php')) {
-            
+        if (!file_exists(APPPATH . 'views/pages/' . $page . '.php')) {
+
             //Page not found
             show_404();
         }
         $data['title'] = ucfirst($page);
-        
+
         $this->load->view('templates/header', $data);
-        $this->load->view('pages/'.$page, $data);
-        $this->load->view('templates/footer', $data);
+        $this->load->view('pages/' . $page, array(
+            "skills" => $this->skillsM->getAll(),
+            "skill" => $this->skillsM->get(3),
+        ));
+        $this->load->view('templates/footer');
     }
 
 }
